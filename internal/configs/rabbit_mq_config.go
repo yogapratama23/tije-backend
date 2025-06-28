@@ -1,7 +1,9 @@
 package configs
 
 import (
+	"fmt"
 	"os"
+	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -13,12 +15,21 @@ const (
 )
 
 func CreateRabbitMqConn() *amqp.Connection {
-	rabbitMqConn, err := amqp.Dial(os.Getenv("RABBIT_MQ_URL"))
-	if err != nil {
-		panic(err.Error())
+	var conn *amqp.Connection
+	var err error
+
+	for i := 1; i < 21; i++ {
+		conn, err = amqp.Dial(os.Getenv("RABBIT_MQ_URL"))
+		if err == nil {
+			fmt.Printf("Connected to RabbitMQ on attempt number %d", i)
+			return conn
+		}
+
+		fmt.Printf("Connection failed on attempt %d \n", i)
+		time.Sleep(2 * time.Second)
 	}
 
-	return rabbitMqConn
+	panic("Failed to connect to RabbitMQ \n")
 }
 
 func SetupRabbitMq(rabbitMqChan *amqp.Channel) {

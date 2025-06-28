@@ -4,17 +4,36 @@
 ### How to Start
 - Clone this repository
 - Run docker compose
-
-### Endpoint list
 ```
-###
+    // Inside the repository
+
+    $ docker compose up --build -d
+```
+
+#### Services list
+- Golang API using Gin
+- RabbitMQ Receiver
+- PostgresQL
+- Eclipse Mosquitto
+
+#### Golang API
+- Simulate Driving
+``` 
+GET {{host}}/simulate-driving?vehicle_id=B1234XYZ 
+```
+This endpoint will trigger driving simulation that will insert driving coordinates to the database for every 2 seconds, everytime the coordinates is sent, it will also calculate the distance to each checkpoint, and if one of the checkpoint distance is below 50 meters, it will trigger geofence_alert to RabbitMQ Receiver and RabbitMQ Receiver will log the alert
+
+- Latest Location
+```
 GET {host}/vehicles/{vehicleId}/location
-
-###
-GET {{host}}/vehicles/{vehicleId}/history?start=1750960862&end=1750960864
-
-###
-GET {{host}}/simulate-driving?vehicle_id=B1234XYZ
 ```
+This endpoint shows the latest location of the selected vehicle id
+
+- Location History
+```
+GET {{host}}/vehicles/{vehicleId}/history?start=1750960862&end=1750960864
+```
+This endpoint shows history of vehicle locations
+
 
 

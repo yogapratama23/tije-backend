@@ -29,7 +29,9 @@ services:
       dockerfile: Dockerfile
     container_name: rabbitmq_consumer
     depends_on:
+      - db
       - rabbitmq
+      - mosquitto
     networks:
       - appnet
     command: ["/app/bin/receiver"]
@@ -73,6 +75,8 @@ services:
       - "9001:9001"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - appnet
   
 networks:
   appnet:

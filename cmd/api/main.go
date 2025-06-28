@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,8 @@ func main() {
 	db := database.Connect()
 	defer db.Close(context.Background())
 
+	database.RunMigration(db)
+
 	// repositories
 	vehicleLocationRepository := repositories.NewVehicleLocationRepository(db)
 
@@ -51,6 +54,12 @@ func main() {
 
 	// routes
 	vehicleLocationRoute := router.Group("/vehicles")
+
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "Hello World!",
+		})
+	})
 
 	vehicleLocationRoute.POST("/create", vehicleLocationController.Insert)
 	vehicleLocationRoute.GET("/:vehicle_id/location", vehicleLocationController.LatestLocation)

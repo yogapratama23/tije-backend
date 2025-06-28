@@ -20,6 +20,8 @@ WORKDIR /app
 
 COPY --from=builder /app/bin/ /app/bin
 
+COPY ./internal/database/migrations ./internal/database/migrations
+
 EXPOSE 8080
 
 CMD ["/app/bin/api"]
