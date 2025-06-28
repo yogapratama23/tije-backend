@@ -14,6 +14,7 @@
 - Golang API using Gin
 - RabbitMQ Receiver
 - PostgresQL
+- RabbitMQ
 - Eclipse Mosquitto
 
 #### Golang API
@@ -21,7 +22,7 @@
 ``` 
 GET {{host}}/simulate-driving?vehicle_id=B1234XYZ 
 ```
-This endpoint will trigger driving simulation that will insert driving coordinates to the database for every 2 seconds, everytime the coordinates is sent, it will also calculate the distance to each checkpoint, and if one of the checkpoint distance is below 50 meters, it will trigger geofence_alert to RabbitMQ Receiver and RabbitMQ Receiver will log the alert
+This endpoint will trigger driving simulation that will insert driving coordinates to the database for every 2 seconds, everytime the coordinates is sent, it will also calculate the distance to each checkpoint, and if one of the checkpoint distance is below 50 meters, it will trigger geofence_alert to RabbitMQ and RabbitMQ Receiver will log the alert
 
 - Latest Location
 ```
