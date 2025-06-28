@@ -1,0 +1,7 @@
+CREATE TABLE vehicle_locations (
+    id SERIAL PRIMARY KEY,
+    vehicle_id VARCHAR NOT NULL,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    timestamp BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)
+);

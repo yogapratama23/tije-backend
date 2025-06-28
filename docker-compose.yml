@@ -1,0 +1,81 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tije-backend
+    depends_on:
+      - db
+      - rabbitmq
+      - mosquitto
+    ports:
+      - 8010:8080
+    networks:
+      - appnet
+    command: ["/app/bin/api"]
+    environment:
+      SERVICE: api
+      GIN_MODE: release
+      PORT: 8080
+      DATABASE_URL: postgresql://postgres:example@db:5432/app_db
+      MQTT_BROKER_URL: tcp://mosquitto:1883
+      RABBIT_MQ_URL: amqp://guest:guest@rabbitmq:5672/
+
+  receiver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rabbitmq_consumer
+    depends_on:
+      - rabbitmq
+    networks:
+      - appnet
+    command: ["/app/bin/receiver"]
+    environment:
+      SERVICE: receiver
+      DATABASE_URL: postgresql://postgres:example@db:5432/app_db
+      MQTT_BROKER_URL: tcp://mosquitto:1883
+      RABBIT_MQ_URL: amqp://guest:guest@rabbitmq:5672/
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    networks:
+      - appnet
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: app_db
+    
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBIT_MQ_DEFAULT_USER: guest
+      RABBIT_MQ_DEFAULT_PASS: guest
+    networks:
+      - appnet
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+  
+networks:
+  appnet:
+
+volumes:
+  pgdata:
