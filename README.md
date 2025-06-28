@@ -25,7 +25,7 @@
 ``` 
 GET {{host}}/simulate-driving?vehicle_id={vehicleId} 
 ```
-This endpoint will trigger driving simulation that will publish driving coordinates to mqtt for every 2 seconds, everytime the coordinates is sent, mqtt subsriber will save it to the database and it will also calculate the distance to each checkpoint, if one of the checkpoint distance is below 50 meters, it will trigger geofence_alert to RabbitMQ and RabbitMQ Receiver will log the alert
+This endpoint will trigger driving simulation that will publish driving coordinates to mqtt for every 2 seconds, everytime the coordinates is sent, mqtt subscriber will save it to the database and it will also calculate the distance between current location each checkpoint, if one of the checkpoint distance is below 50 meters, it will trigger geofence_alert to RabbitMQ and RabbitMQ Receiver will log the alert
 
 - Latest Location
 ```
